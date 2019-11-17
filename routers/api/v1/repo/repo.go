@@ -1003,9 +1003,28 @@ func CheckoutCommit(ctx *context.APIContext, w http.ResponseWriter, r *http.Requ
 	}
 
 	fmt.Println(string(body))
-	log.Trace("Repository deleted:")
+	// log.Trace("Repository deleted:")
 
 	// ctx.Status(200)
 	ctx.HandleText(200, "test result")
+
+}
+
+func GetHeadLocal(ctx *context.APIContext) {
+	repo := ctx.Params(":repo")
+	url := "http://localhost:5000/head/" + repo
+
+	resp, err := http.Get(url)
+	defer resp.Body.Close()
+	body, err := ioutil.ReadAll(resp.Body)
+
+	if err != nil {
+		// log.Fatalln(err)
+		return
+	}
+
+	fmt.Println(string(body))
+
+	ctx.HandleText(200, string(body))
 
 }
