@@ -1299,6 +1299,37 @@
         }
       }
     },
+    "local/checkout/{repo}/{commit}":{
+      "get":{
+        "produces":[
+          "application/json"
+        ],
+        "tags": ["local"],
+        "summary": ["checkout to local"],
+        "operationId":["checkout"],
+        "parameters":[
+          {
+            "type": "string",
+            "description": "name of the repo",
+            "name": "repo",
+            "in": "path",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "name of the commit",
+            "name": "commit",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses":{
+          "200": {
+            "$ref": "#/responses/Repository"
+          }
+        }
+      }
+    },
     "/repos/{owner}/{repo}": {
       "get": {
         "produces": [

@@ -868,6 +868,11 @@ func RegisterRoutes(m *macaron.Macaron) {
 
 		m.Group("/topics", func() {
 			m.Get("/search", repo.TopicSearch)
+			m.Get("/didinTest", repo.DidinTest)
+		})
+
+		m.Group("/local", func() {
+			m.Get("/checkout/:repo/:commit", repo.CheckoutCommit)
 		})
 	}, securityHeaders(), context.APIContexter(), sudo())
 }

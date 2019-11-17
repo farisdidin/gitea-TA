@@ -9,6 +9,7 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
+	"io/ioutil"
 	"net/http"
 	"net/url"
 	"strings"
@@ -974,4 +975,37 @@ func MirrorSync(ctx *context.APIContext) {
 	mirror_service.StartToMirror(repo.ID)
 
 	ctx.Status(200)
+}
+
+func CheckoutCommit(ctx *context.APIContext, w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	// params := mux.Vars(r) // Gets params
+
+	// repo := params["repo"]
+	// commit := params["commit"]
+
+	repo := ctx.Params(":repo")
+	commit := ctx.Params(":commit")
+	url := "http://localhost:5000/checkout/" + repo + "/" + commit
+	// log.Println(url)
+	resp, err := http.Get(url)
+	// if err != nil {
+	// 	// log.Fatalln(err)
+	// 	return
+	// }
+
+	defer resp.Body.Close()
+	body, err := ioutil.ReadAll(resp.Body)
+
+	if err != nil {
+		// log.Fatalln(err)
+		return
+	}
+
+	fmt.Println(string(body))
+	log.Trace("Repository deleted:")
+
+	// ctx.Status(200)
+	ctx.HandleText(200, "test result")
+
 }

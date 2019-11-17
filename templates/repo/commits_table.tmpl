@@ -80,7 +80,7 @@
 							</a>
 						</td>
 						<td>
-							<a href="#" class="button-checkout" sha="{{ShortSha .ID.String}}" repo="{{$.Reponame}}">
+							<a href="#" class="button-checkout" url="{{AppSubUrl}}" sha="{{ShortSha .ID.String}}" repo="{{$.Reponame}}">
 								<button>Checkout</button>
 							</a>
 						</td>
@@ -116,21 +116,21 @@
 				$(this).on('click', function(){
 					var sha = $(this).attr("sha")
 					var repo = $(this).attr("repo")
-					var api = 'localhost:5000/checkout/'
-					var api_url = api.concat(repo,'/',sha)
+					var url = $(this).attr("url")
+					var api_url = url.concat('/api/v1/local/checkout/',repo,'/',sha)
 					console.log(api_url)
 					$.ajax({
-						//beforeSend: function(response){
-							//response.setHeader("Access-Control-Allow-Origin", request.getHeader("Origin"));
+						beforeSend: function(response){ 
+						response.setRequestHeader("Authorization", "token 5b297d2d0f6e7c6f5d7a7a8de53a776ae008c386");
+						//response.setHeader("Access-Control-Allow-Origin", request.getHeader("Origin"));
 						//	response.setRequestHeader("Vary", "Origin");
 						//	response.setRequestHeader("Access-Control-Allow-Credentials", "true");
 						//	response.setRequestHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE");
 						//	response.setRequestHeader("Access-Control-Max-Age", "3600");
 						//	response.setRequestHeader("Access-Control-Allow-Headers", "Content-Type, Accept, X-Requested-With, remember-me");
-						//},
+						},
 						type: "GET",
 						url: api_url,
-						data: 'test',
 						crossDomain: true,
 						headers: {
 							'Access-Control-Allow-Origin': '*'

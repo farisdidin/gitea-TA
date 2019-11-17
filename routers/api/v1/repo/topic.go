@@ -228,6 +228,10 @@ func DeleteTopic(ctx *context.APIContext) {
 }
 
 // TopicSearch search for creating topic
+func DidinTest(ctx *context.Context) {
+	ctx.HandleText(200, "test aja")
+}
+
 func TopicSearch(ctx *context.Context) {
 	// swagger:operation GET /topics/search repository topicSearch
 	// ---
