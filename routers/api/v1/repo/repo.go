@@ -1006,7 +1006,7 @@ func CheckoutCommit(ctx *context.APIContext, w http.ResponseWriter, r *http.Requ
 	// log.Trace("Repository deleted:")
 
 	// ctx.Status(200)
-	ctx.HandleText(200, "test result")
+	ctx.HandleText(200, string(body))
 
 }
 

@@ -80,8 +80,8 @@
 							</a>
 						</td>
 						<td>
-							<a href="#" class="button-checkout" url="{{AppSubUrl}}" sha="{{ShortSha .ID.String}}" repo="{{$.Reponame}}">
-								<button>Checkout</button>
+							<a class="button-checkout" url="{{AppSubUrl}}" sha="{{ShortSha .ID.String}}" repo="{{$.Reponame}}"  >
+								<button class="button-name ui tiny button" url="{{AppSubUrl}}" sha="{{ShortSha .ID.String}}" repo="{{$.Reponame}}" style="background-color:green; color:white" >Checkout</button>
 							</a>
 							<a id="reponame" repo="{{$.Reponame}}" url="{{AppSubUrl}}" hidden ></a>
 						</td>
@@ -123,12 +123,29 @@
 			type: "GET",
 			url: head_url,
 			crossDomain: true,
+			dataType: "json",
 			headers: {
 				'Access-Control-Allow-Origin': '*'
 			},
 			success : function(data){
-				//location.reload() 
-				console.log(data)
+				
+				console.log(data["hash"])
+				var hash = data["hash"]
+				$(".button-name").each(function(index){
+					if (hash == $(this).attr("sha")){
+						$(this).html('HEAD')
+						$(this).css({"background-color": "", "color" : ""})
+						var helo = $(this).html()
+						console.log(helo)
+					}
+				})
+
+
+				// head_hash = data.head_hash
+				// foreach buttons as button:
+				// 	if button.head_hash == head_hash:
+				// 		button.disable()
+				// 		button.text("Head")
 			},
 			error : function(){
 				console.log('error')
@@ -136,33 +153,41 @@
 
 		});
 
-		$(".button-checkout").each(function(index){
+		$(".button-name").each(function(index){
+				
 				$(this).on('click', function(){
-					var sha = $(this).attr("sha")
-					var repo = $(this).attr("repo")
-					var url = $(this).attr("url")
-					var api_url = url.concat('/api/v1/local/checkout/',repo,'/',sha)
-					console.log(api_url)
-					$.ajax({
-						beforeSend: function(response){ 
-						response.setRequestHeader("Authorization", "token 5b297d2d0f6e7c6f5d7a7a8de53a776ae008c386");
-						
-						},
-						type: "GET",
-						url: api_url,
-						crossDomain: true,
-						headers: {
-							'Access-Control-Allow-Origin': '*'
-						},
-						success : function(){
-							location.reload()
-							console.log('success')
-						},
-						error : function(){
-							console.log('error')
-						},
-					});
-			});	
+					if($(this).html() != 'HEAD'){
+						var sha = $(this).attr("sha")
+						var repo = $(this).attr("repo")
+						var url = $(this).attr("url")
+						var api_url = url.concat('/api/v1/local/checkout/',repo,'/',sha)
+						console.log(api_url)
+						console.log("bukan Head")
+						$.ajax({
+							beforeSend: function(response){ 
+							response.setRequestHeader("Authorization", "token 5b297d2d0f6e7c6f5d7a7a8de53a776ae008c386");
+							
+							},
+							type: "GET",
+							url: api_url,
+							crossDomain: true,
+							dataType: "json",
+							headers: {
+								'Access-Control-Allow-Origin': '*'
+							},
+							success : function(data){
+								location.reload()
+								console.log('success')
+							},
+							error : function(data){
+								console.log('error')
+							},
+						});
+
+					};
+
+				});	
+				
 		});
 	//your code here
 	});
