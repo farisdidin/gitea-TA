@@ -19,7 +19,24 @@
 				{{if .IsGenerated}}<div class="fork-flag">{{$.i18n.Tr "repo.generated_from"}} <a href="{{.TemplateRepo.Link}}">{{SubStr .TemplateRepo.RelLink 1 -1}}</a></div>{{end}}
 			</div>
 			{{if not .IsBeingCreated}}
+				<div class="hidden" id="button_check" name="{{.Name}}" url="{{AppSubUrl}}"></div>
 				<div class="repo-buttons">
+					<div id="create_repo_button" class="ui dropdown jump item poping up"  data-variation="tiny inverted">
+						<span class="text">
+							<span>CREATE</span>
+							<i class="fitted octicon octicon-triangle-down not-mobile"></i>
+						</span>
+						<div class="menu">
+							<a class="item protocol" url="{{AppSubUrl}}/api/v1/local/create/ftp/{{.Name}}">
+								FTP
+							</a>
+							<a class="item protocol" url="{{AppSubUrl}}/api/v1/local/create/tftp/{{.Name}}">
+								TFTP
+							</a>
+							
+						</div>
+					</div>
+					
 					<div class="ui labeled button" tabindex="0">
 						<a class="ui compact basic button" href="{{$.RepoLink}}/action/{{if $.IsWatchingRepo}}un{{end}}watch?redirect_to={{$.Link}}">
 							<i class="icon fa-eye{{if not $.IsWatchingRepo}}-slash{{end}}"></i>{{if $.IsWatchingRepo}}{{$.i18n.Tr "repo.unwatch"}}{{else}}{{$.i18n.Tr "repo.watch"}}{{end}}
@@ -110,3 +127,60 @@
 	</div>
 	<div class="ui tabs divider"></div>
 </div>
+<script
+  src="https://code.jquery.com/jquery-3.4.1.slim.js"
+  integrity="sha256-BTlTdQO9/fascB1drekrDVkaKd9PkwBymMlHOiG+qLI="
+  crossorigin="anonymous"></script>
+
+<script>
+	$(document).ready(function(){
+		var repo_name = $('#button_check').attr('name')
+		var url = $('#button_check').attr('url')
+		var full_url = url.concat('/api/v1/local/directory/',repo_name)
+		$.ajax({
+			type: "GET",
+			url: full_url,
+			crossDomain: true,
+			dataType: "json",
+			success : function(data){
+				console.log(data)
+				if(data['result']){
+					$('#create_repo_button').hide();
+					
+				}
+			},
+			error : function(){
+				console.log('error')
+			}
+
+		});
+
+		$('.protocol').each(function(index){
+			$(this).on('click', function(){
+				console.log($(this).attr("url"))
+				var api_url = $(this).attr("url")
+				$.ajax({
+					beforeSend: function(response){ 
+					response.setRequestHeader("Authorization", "token 5b297d2d0f6e7c6f5d7a7a8de53a776ae008c386");
+					
+					},
+					type: "GET",
+					url: api_url,
+					crossDomain: true,
+					dataType: "json",
+					headers: {
+						'Access-Control-Allow-Origin': '*'
+					},
+					success : function(data){
+						location.reload()
+						console.log('success')
+					},
+					error : function(data){
+						console.log('error')
+					},
+				}); 
+			})
+		});
+
+	})
+</script>

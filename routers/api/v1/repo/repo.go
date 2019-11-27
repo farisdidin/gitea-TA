@@ -1028,3 +1028,40 @@ func GetHeadLocal(ctx *context.APIContext) {
 	ctx.HandleText(200, string(body))
 
 }
+
+func GetRepoDir(ctx *context.APIContext) {
+	repo := ctx.Params(":repo")
+	url := "http://localhost:5000/directory/" + repo
+
+	resp, err := http.Get(url)
+	defer resp.Body.Close()
+	body, err := ioutil.ReadAll(resp.Body)
+
+	if err != nil {
+		// log.Fatalln(err)
+		return
+	}
+
+	fmt.Println(string(body))
+
+	ctx.HandleText(200, string(body))
+}
+
+func CreateRepo(ctx *context.APIContext) {
+	protocol := ctx.Params(":protocol")
+	repo := ctx.Params(":repo")
+	url := "http://localhost:5000/create/" + protocol + "/" + repo
+
+	resp, err := http.Get(url)
+	defer resp.Body.Close()
+	body, err := ioutil.ReadAll(resp.Body)
+
+	if err != nil {
+		// log.Fatalln(err)
+		return
+	}
+
+	fmt.Println(string(body))
+
+	ctx.HandleText(200, string(body))
+}
