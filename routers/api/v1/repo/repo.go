@@ -1065,3 +1065,20 @@ func CreateRepo(ctx *context.APIContext) {
 
 	ctx.HandleText(200, string(body))
 }
+
+func RemoveRepo(ctx *context.APIContext) {
+	repo := ctx.Params(":repo")
+	url := "http://localhost:5000/remove/" + repo
+	resp, err := http.Get(url)
+	defer resp.Body.Close()
+	body, err := ioutil.ReadAll(resp.Body)
+
+	if err != nil {
+		// log.Fatalln(err)
+		return
+	}
+
+	fmt.Println(string(body))
+
+	ctx.HandleText(200, string(body))
+}

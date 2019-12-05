@@ -21,6 +21,10 @@
 			{{if not .IsBeingCreated}}
 				<div class="hidden" id="button_check" name="{{.Name}}" url="{{AppSubUrl}}"></div>
 				<div class="repo-buttons">
+					<div id="div_remove_button">
+						<button id="remove_button"  class="ui tiny red button" >REMOVE</button>
+
+					</div>
 					<div id="create_repo_button" class="ui dropdown jump item poping up"  data-variation="tiny inverted">
 						<span class="text">
 							<span>CREATE</span>
@@ -147,6 +151,9 @@
 				if(data['result']){
 					$('#create_repo_button').hide();
 					
+				}else{
+					$('#div_remove_button').hide();
+
 				}
 			},
 			error : function(){
@@ -154,6 +161,33 @@
 			}
 
 		});
+
+		$('#remove_button').on('click', function(){
+			var url = $('#button_check').attr('url')
+			var name = $('#button_check').attr('name')
+			var full_url = url.concat('/api/v1/local/remove/', name);
+			console.log(full_url)
+			$.ajax({
+					beforeSend: function(response){ 
+					response.setRequestHeader("Authorization", "token 5b297d2d0f6e7c6f5d7a7a8de53a776ae008c386");
+					
+					},
+					type: "GET",
+					url: full_url,
+					crossDomain: true,
+					dataType: "json",
+					headers: {
+						'Access-Control-Allow-Origin': '*'
+					},
+					success : function(data){
+						location.reload()
+						console.log('success')
+					},
+					error : function(data){
+						console.log('error')
+					},
+				});
+		})
 
 		$('.protocol').each(function(index){
 			$(this).on('click', function(){
